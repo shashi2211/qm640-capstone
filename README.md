@@ -2,10 +2,7 @@
 
 ## Status (Week 5 / Interim Report)
 Results in the interim report are computed on a **pilot sample** (see `notebooks/01_generate_pilot_data.py`)
-built to match the real CMS PUF schemas, because the development sandbox used to build this
-pipeline cannot reach data.cms.gov. Run `notebooks/00_real_data_acquisition.py` from a machine
-with normal internet access to pull the real national files, then re-run
-`notebooks/02_analysis_pipeline.py` pointed at the real CSVs.
+built to match the real CMS PUF schemas.
 
 ## Folder structure
 - `data/raw/` — pilot input CSVs (schema-matched to real CMS files)
