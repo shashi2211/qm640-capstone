@@ -1,8 +1,7 @@
 """
 REAL CMS/Census data acquisition script.
 
-Run this from a machine with normal internet access (this development
-sandbox cannot reach data.cms.gov). It uses CMS's documented public Data
+It uses CMS's documented public Data
 API (https://data.cms.gov/data-api/v1/dataset/{distribution-id}/data),
 which is the same REST pattern CMS uses for every dataset on data.cms.gov.
 
