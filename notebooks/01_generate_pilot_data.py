@@ -2,8 +2,7 @@
 Generates an ILLUSTRATIVE PILOT dataset matching the schema of the real CMS
 Medicare DME public use files (Supplier PUF, Geographic Variation PUF).
 
-IMPORTANT: This is NOT real extracted CMS data. This sandboxed environment
-cannot reach data.cms.gov. Values are randomly generated but calibrated to
+IMPORTANT: This is NOT real extracted CMS data.  Values are randomly generated but calibrated to
 real, cited, published national parameters (e.g., ~34M Original Medicare
 FFS beneficiaries in 2023-2024 per CMS Fast Facts; ~$10B annual national
 DME spending per ProMarket/Diwan et al. 2026), so that the pilot sample's
