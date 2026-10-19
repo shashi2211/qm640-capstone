@@ -1,0 +1,222 @@
+{
+  "raw_county_shape": [
+    425,
+    12
+  ],
+  "raw_supplier_shape": [
+    657,
+    8
+  ],
+  "county_cleaning": {
+    "n_before": 425,
+    "n_after_dedup": 420,
+    "duplicates_removed": 5,
+    "missing_pct_by_col": {
+      "median_household_income": 3.33,
+      "avg_hcc_risk_score": 1.9,
+      "suppliers_per_10k_beneficiaries": 2.86
+    },
+    "outliers_capped": 9
+  },
+  "supplier_cleaning": {
+    "n_before": 657,
+    "n_after_dedup": 650,
+    "duplicates_removed": 7,
+    "missing_pct_by_col": {
+      "avg_payment_per_claim": 2.46,
+      "claims_per_beneficiary": 1.69
+    }
+  },
+  "cleaning_log": [
+    [
+      "Duplicates",
+      "all columns",
+      "pandas .duplicated()",
+      "Removed 5 exact duplicate rows",
+      "Exact duplicates add no information and bias standard errors downward"
+    ],
+    [
+      "Missing values",
+      "median_household_income, avg_hcc_risk_score, suppliers_per_10k_beneficiaries",
+      "pandas .isna() audit",
+      "Median imputation per column",
+      "Median is robust to the skew typical of income/risk-score variables; affected columns had 2-3.5% missingness (MCAR pattern), well below the 10% threshold where imputation would be considered risky"
+    ],
+    [
+      "Outliers",
+      "dme_spending_per_beneficiary",
+      "IQR rule (1.5xIQR)",
+      "Capped 9 high-end outliers at the upper fence (winsorizing)",
+      "Winsorizing preserves the full county sample (important given the RQ1/RQ2 minimum-N requirements) while limiting undue leverage from extreme values on the regression"
+    ],
+    [
+      "Duplicates",
+      "all columns (supplier)",
+      "pandas .duplicated()",
+      "Removed 7 duplicate supplier rows",
+      "Prevents double-counting a supplier's billing profile"
+    ],
+    [
+      "Missing values",
+      "avg_payment_per_claim, claims_per_beneficiary",
+      "pandas .isna() audit",
+      "Median imputation per column",
+      "Billing fields are right-skewed; median imputation avoids distorting the distribution used later for outlier screening"
+    ]
+  ],
+  "descriptive_stats": {
+    "dme_spending_per_beneficiary": {
+      "count": 420.0,
+      "mean": 275.23,
+      "std": 49.71,
+      "min": 168.97,
+      "25%": 241.26,
+      "50%": 273.63,
+      "75%": 304.8,
+      "max": 400.1
+    },
+    "dme_utilization_rate": {
+      "count": 420.0,
+      "mean": 114.34,
+      "std": 17.58,
+      "min": 62.44,
+      "25%": 103.74,
+      "50%": 113.16,
+      "75%": 126.09,
+      "max": 173.4
+    },
+    "avg_hcc_risk_score": {
+      "count": 420.0,
+      "mean": 1.0,
+      "std": 0.18,
+      "min": 0.55,
+      "25%": 0.89,
+      "50%": 1.01,
+      "75%": 1.12,
+      "max": 1.49
+    },
+    "pct_dual_eligible": {
+      "count": 420.0,
+      "mean": 20.6,
+      "std": 7.36,
+      "min": 3.0,
+      "25%": 16.09,
+      "50%": 20.87,
+      "75%": 25.32,
+      "max": 40.53
+    },
+    "pct_age_85plus": {
+      "count": 420.0,
+      "mean": 9.54,
+      "std": 2.93,
+      "min": 2.0,
+      "25%": 7.64,
+      "50%": 9.69,
+      "75%": 11.5,
+      "max": 18.57
+    },
+    "median_household_income": {
+      "count": 420.0,
+      "mean": 63390.52,
+      "std": 15371.29,
+      "min": 32000.0,
+      "25%": 53356.25,
+      "50%": 62826.5,
+      "75%": 72589.0,
+      "max": 117062.0
+    },
+    "poverty_rate": {
+      "count": 420.0,
+      "mean": 12.74,
+      "std": 4.94,
+      "min": 3.0,
+      "25%": 9.04,
+      "50%": 12.72,
+      "75%": 15.98,
+      "max": 25.99
+    },
+    "suppliers_per_10k_beneficiaries": {
+      "count": 420.0,
+      "mean": 6.88,
+      "std": 3.22,
+      "min": 0.5,
+      "25%": 4.41,
+      "50%": 6.86,
+      "75%": 9.23,
+      "max": 15.49
+    }
+  },
+  "eda_risk_spending_corr": {
+    "r": 0.556,
+    "p": 0.0
+  },
+  "sample_size_summary": {
+    "RQ1_required": 114,
+    "RQ1_achieved": 420,
+    "RQ2_required": 180,
+    "RQ2_achieved": 420,
+    "RQ3_required": 385,
+    "RQ3_achieved": 650,
+    "RQ4_required": 85,
+    "RQ4_achieved": 420
+  },
+  "RQ1": {
+    "ols_r2": 0.633,
+    "ols_adj_r2_train": 0.622,
+    "test_r2_ols": 0.505,
+    "test_adj_r2_ols": 0.438,
+    "test_rmse_ols": 33.17,
+    "test_mae_ols": 28.05,
+    "test_r2_rf": 0.483,
+    "test_rmse_rf": 33.9,
+    "test_mae_rf": 28.19,
+    "significant_predictors_p05": [
+      "const",
+      "avg_hcc_risk_score",
+      "pct_dual_eligible",
+      "pct_age_85plus",
+      "median_household_income",
+      "poverty_rate",
+      "census_region_Northeast",
+      "census_region_South",
+      "census_region_West"
+    ],
+    "top3_rf_features": [
+      "avg_hcc_risk_score",
+      "census_region_South",
+      "pct_dual_eligible"
+    ],
+    "max_vif": 1.51
+  },
+  "RQ2a_utilization_anova": {
+    "F": 37.846,
+    "p": 0.0,
+    "eta_sq": 0.214
+  },
+  "RQ2b_access_anova": {
+    "F": 0.352,
+    "p": 0.787478,
+    "eta_sq": 0.003
+  },
+  "RQ2_kmeans": {
+    "best_k": 2,
+    "silhouette": 0.243,
+    "cluster_sizes": {
+      "0": 195,
+      "1": 225
+    }
+  },
+  "RQ3_preliminary": {
+    "n_suppliers": 650,
+    "pct_flagged_iqr": 9.69,
+    "pct_flagged_iso": 3.54,
+    "jaccard_similarity": 0.284,
+    "recall_vs_known_injected_anomaly_pilot_only": 0.636
+  },
+  "RQ4_preliminary": {
+    "n_state_category_cells": 188,
+    "pct_highly_concentrated": 98.4,
+    "pct_unconcentrated": 0.0,
+    "mean_hhi": 5547.5
+  }
+}
