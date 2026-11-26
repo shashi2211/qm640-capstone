@@ -1,221 +1,347 @@
 {
   "raw_shapes": {
-    "geographic_variation": [
-      15129,
+    "geographic_variation_files": 3,
+    "geographic_variation_rows": [
+      36994,
       246
     ],
-    "dme_supplier": [
-      50009,
+    "dme_supplier_files": 2,
+    "dme_supplier_rows": [
+      60060,
       93
     ],
-    "dme_referring_provider": [
-      54946,
-      33
+    "dme_referring_provider_files": 27,
+    "dme_referring_provider_rows": [
+      1347255,
+      7
+    ],
+    "acs_rows": [
+      3222,
+      8
     ]
   },
   "county_cleaning": {
-    "n_raw": 1307,
-    "n_after_dedup_and_region_filter": 1306,
-    "duplicates_removed": 0,
-    "suppressed_counts": {
-      "DME_MDCR_STDZD_PYMT_PC": 25,
-      "DME_EVNTS_PER_1000_BENES": 25,
-      "BENE_AVG_AGE": 22,
-      "BENE_DUAL_PCT": 33,
-      "BENE_FEML_PCT": 24,
-      "BENE_RACE_BLACK_PCT": 559,
-      "BENE_RACE_HSPNC_PCT": 559,
-      "BENES_TOTAL_CNT": 22
-    },
-    "missing_pct_after_suppression_conversion": {
-      "DME_MDCR_STDZD_PYMT_PC": 1.91,
-      "DME_EVNTS_PER_1000_BENES": 1.91,
-      "BENE_AVG_AGE": 1.68,
-      "BENE_DUAL_PCT": 2.52,
-      "BENE_FEML_PCT": 1.84,
-      "BENE_RACE_BLACK_PCT": 42.77,
-      "BENE_RACE_HSPNC_PCT": 42.77,
-      "BENES_TOTAL_CNT": 1.68
-    },
-    "outliers_capped": 99
-  },
-  "supplier_cleaning": {
-    "n_raw": 50009,
-    "n_dme_active": 47096,
-    "n_after_dedup": 47096,
+    "n_raw": 3197,
+    "n_final": 3193,
     "duplicates_removed": 0,
     "missing_pct": {
-      "DME_Tot_Suplr_Benes": 10.13,
+      "DME_MDCR_STDZD_PYMT_PC": 1.75,
+      "DME_EVNTS_PER_1000_BENES": 1.75,
+      "BENE_AVG_AGE": 1.66,
+      "BENE_DUAL_PCT": 2.47,
+      "BENE_FEML_PCT": 1.72,
+      "BENE_RACE_BLACK_PCT": 44.29,
+      "BENE_RACE_HSPNC_PCT": 44.29
+    },
+    "outliers_capped": 231,
+    "acs_unmatched": 52
+  },
+  "supplier_cleaning": {
+    "n_raw": 60060,
+    "n_dme_active": 56562,
+    "n_final": 56562,
+    "duplicates_removed": 0,
+    "missing_pct": {
+      "DME_Tot_Suplr_Benes": 10.1,
       "DME_Tot_Suplr_Clms": 0.0,
       "DME_Tot_Suplr_Srvcs": 0.0,
       "DME_Suplr_Mdcr_Pymt_Amt": 0.0,
-      "DME_Suplr_Mdcr_Stdzd_Pymt_Amt": 0.0
-    }
+      "DME_Suplr_Mdcr_Stdzd_Pymt_Amt": 0.0,
+      "Bene_Avg_Risk_Scre": 0.01
+    },
+    "n_states_with_real_state_rows": 55
   },
   "cleaning_log": [
     [
       "CMS small-cell suppression",
       "DME_MDCR_STDZD_PYMT_PC, DME_EVNTS_PER_1000_BENES, BENE_AVG_AGE, BENE_DUAL_PCT, BENE_FEML_PCT, BENE_RACE_BLACK_PCT, BENE_RACE_HSPNC_PCT, BENES_TOTAL_CNT",
-      "CMS '*' marker (counts below privacy threshold)",
-      "Converted to NaN then median-imputed; counts suppressed per column: {'DME_MDCR_STDZD_PYMT_PC': 25, 'DME_EVNTS_PER_1000_BENES': 25, 'BENE_AVG_AGE': 22, 'BENE_DUAL_PCT': 33, 'BENE_FEML_PCT': 24, 'BENE_RACE_BLACK_PCT': 559, 'BENE_RACE_HSPNC_PCT': 559, 'BENES_TOTAL_CNT': 22}",
-      "CMS suppresses cells with very few beneficiaries to protect privacy; median imputation preserves the county sample size needed for RQ1/RQ2 power"
+      "CMS '*' marker",
+      "NaN -> median imputation",
+      "suppressed counts: {'DME_MDCR_STDZD_PYMT_PC': 56, 'DME_EVNTS_PER_1000_BENES': 56, 'BENE_AVG_AGE': 53, 'BENE_DUAL_PCT': 79, 'BENE_FEML_PCT': 55, 'BENE_RACE_BLACK_PCT': 1416, 'BENE_RACE_HSPNC_PCT': 1416, 'BENES_TOTAL_CNT': 52}"
     ],
     [
-      "Duplicates",
+      "Duplicates (county)",
       "BENE_GEO_CD",
       "pandas .duplicated()",
-      "Removed 0 duplicate county rows",
-      "Each county should appear once per year/age-level slice"
+      "removed 0",
+      "exact-key duplicates"
     ],
     [
-      "Outliers",
+      "Outliers (county)",
       "DME_MDCR_STDZD_PYMT_PC",
       "IQR rule (1.5xIQR)",
-      "Capped 99 high-end county outliers",
-      "Preserves full county sample for RQ1/RQ2 power while limiting undue leverage"
+      "capped 231",
+      "winsorized upper fence"
     ],
     [
       "Unmapped territory rows",
       "census_region",
-      "Null check after state->region mapping",
-      "Dropped 1 rows (U.S. territories outside the 4 Census regions)",
-      "RQ2's ANOVA requires the four standard Census Bureau regions"
+      "null check",
+      "dropped 4",
+      "ANOVA needs the 4 standard regions"
+    ],
+    [
+      "ACS merge (income/poverty)",
+      "median_hh_income, poverty_rate",
+      "left-join on 5-digit county FIPS",
+      "52 of 3193 counties unmatched (median-imputed)",
+      "real ACS 5-Year county file, replacing the earlier CPS-extract error"
     ],
     [
       "DME-inactive suppliers excluded",
-      "DME_Sprsn_Ind and DME_* fields",
+      "DME_Sprsn_Ind",
       "CMS DME suppression indicator",
-      "Excluded 2913 of 50009 rows lacking confirmed DME billing activity",
-      "This study is specifically about DME suppliers; rows without DME activity (or DME-suppressed rows) are out of scope"
+      "excluded 3498 of 60060",
+      "out-of-scope general suppliers"
     ],
     [
       "Duplicates (supplier)",
       "Suplr_NPI",
       "pandas .duplicated()",
-      "Removed 0 duplicate NPI rows",
-      "Each supplier NPI should appear once"
+      "removed 0",
+      "one row per NPI"
     ],
     [
       "Missing values (supplier)",
-      "DME_Tot_Suplr_Benes, DME_Tot_Suplr_Clms, DME_Tot_Suplr_Srvcs, DME_Suplr_Mdcr_Pymt_Amt, DME_Suplr_Mdcr_Stdzd_Pymt_Amt",
-      "pandas .isna() audit",
-      "Median imputation per column",
-      "Residual small-cell suppression within DME-active suppliers; missingness: {'DME_Tot_Suplr_Benes': np.float64(10.13), 'DME_Tot_Suplr_Clms': np.float64(0.0), 'DME_Tot_Suplr_Srvcs': np.float64(0.0), 'DME_Suplr_Mdcr_Pymt_Amt': np.float64(0.0), 'DME_Suplr_Mdcr_Stdzd_Pymt_Amt': np.float64(0.0)}"
+      "DME_Tot_Suplr_Benes, DME_Tot_Suplr_Clms, DME_Tot_Suplr_Srvcs, DME_Suplr_Mdcr_Pymt_Amt, DME_Suplr_Mdcr_Stdzd_Pymt_Amt, Bene_Avg_Risk_Scre",
+      "null audit",
+      "median imputation",
+      "{'DME_Tot_Suplr_Benes': np.float64(10.1), 'DME_Tot_Suplr_Clms': np.float64(0.0), 'DME_Tot_Suplr_Srvcs': np.float64(0.0), 'DME_Suplr_Mdcr_Pymt_Amt': np.float64(0.0), 'DME_Suplr_Mdcr_Stdzd_Pymt_Amt': np.float64(0.0), 'Bene_Avg_Risk_Scre': np.float64(0.01)}"
     ],
     [
-      "State coverage gap (access proxy)",
+      "State coverage (access proxy)",
       "suppliers_per_10k",
-      "Left-join audit against state_benes table",
-      "857 of 1306 counties in states absent from the truncated State-level extract; median-imputed",
-      "The truncated Geographic Variation file does not include a State-level row for every state; documented as a data-completeness limitation"
+      "left-join audit",
+      "0 of 3193 imputed; 55 states had real State-level 2024 rows",
+      "full multi-year file now covers far more states than the earlier truncated extract"
     ]
   ],
-  "sample_size_summary": {
-    "RQ1_required": 114,
-    "RQ1_achieved": 1306,
-    "RQ2_required": 180,
-    "RQ2_achieved": 1306,
-    "RQ3_required": 385,
-    "RQ3_achieved": 47096
+  "database": {
+    "engine": "SQLite 3",
+    "tables": [
+      "county_geographic (3193 rows)",
+      "dme_supplier (56562 rows)"
+    ],
+    "sample_query_result": [
+      {
+        "census_region": "South",
+        "n_counties": 1437,
+        "avg_spending": 558.85,
+        "avg_utilization": 1752.56
+      },
+      {
+        "census_region": "West",
+        "n_counties": 462,
+        "avg_spending": 435.66,
+        "avg_utilization": 1678.39
+      },
+      {
+        "census_region": "Midwest",
+        "n_counties": 1067,
+        "avg_spending": 414.55,
+        "avg_utilization": 1846.21
+      },
+      {
+        "census_region": "Northeast",
+        "n_counties": 227,
+        "avg_spending": 377.05,
+        "avg_utilization": 1542.65
+      }
+    ]
   },
-  "descriptive_stats": {
-    "DME_MDCR_STDZD_PYMT_PC": {
-      "count": 1306.0,
-      "mean": 479.77,
-      "std": 189.08,
-      "min": 26.71,
-      "25%": 347.91,
-      "50%": 433.08,
-      "75%": 571.73,
-      "max": 907.42
+  "eda": {
+    "overall": {
+      "DME_MDCR_STDZD_PYMT_PC": {
+        "count": 3193.0,
+        "mean": 479.88,
+        "std": 192.27,
+        "min": 26.71,
+        "25%": 343.95,
+        "50%": 429.95,
+        "75%": 572.07,
+        "max": 914.24
+      },
+      "DME_EVNTS_PER_1000_BENES": {
+        "count": 3193.0,
+        "mean": 1758.2,
+        "std": 371.34,
+        "min": 391.3,
+        "25%": 1536.91,
+        "50%": 1734.41,
+        "75%": 1961.57,
+        "max": 3484.91
+      },
+      "BENE_AVG_AGE": {
+        "count": 3193.0,
+        "mean": 72.99,
+        "std": 1.17,
+        "min": 67.0,
+        "25%": 72.0,
+        "50%": 73.0,
+        "75%": 74.0,
+        "max": 77.0
+      },
+      "BENE_DUAL_PCT": {
+        "count": 3193.0,
+        "mean": 0.14,
+        "std": 0.07,
+        "min": 0.02,
+        "25%": 0.09,
+        "50%": 0.13,
+        "75%": 0.17,
+        "max": 0.71
+      },
+      "BENE_FEML_PCT": {
+        "count": 3193.0,
+        "mean": 0.53,
+        "std": 0.02,
+        "min": 0.4,
+        "25%": 0.52,
+        "50%": 0.53,
+        "75%": 0.55,
+        "max": 0.6
+      },
+      "BENE_RACE_BLACK_PCT": {
+        "count": 3193.0,
+        "mean": 0.04,
+        "std": 0.06,
+        "min": 0.0,
+        "25%": 0.02,
+        "50%": 0.02,
+        "75%": 0.03,
+        "max": 0.65
+      },
+      "BENE_RACE_HSPNC_PCT": {
+        "count": 3193.0,
+        "mean": 0.03,
+        "std": 0.06,
+        "min": 0.0,
+        "25%": 0.01,
+        "50%": 0.02,
+        "75%": 0.02,
+        "max": 0.83
+      },
+      "suppliers_per_10k": {
+        "count": 3193.0,
+        "mean": 8.68,
+        "std": 1.15,
+        "min": 4.38,
+        "25%": 8.12,
+        "50%": 8.48,
+        "75%": 9.08,
+        "max": 11.3
+      },
+      "median_hh_income": {
+        "count": 3193.0,
+        "mean": 66021.1,
+        "std": 17235.84,
+        "min": 25425.0,
+        "25%": 55187.0,
+        "50%": 63654.0,
+        "75%": 73284.0,
+        "max": 178707.0
+      },
+      "poverty_rate": {
+        "count": 3193.0,
+        "mean": 0.14,
+        "std": 0.06,
+        "min": 0.02,
+        "25%": 0.1,
+        "50%": 0.13,
+        "75%": 0.17,
+        "max": 0.53
+      }
     },
-    "DME_EVNTS_PER_1000_BENES": {
-      "count": 1306.0,
-      "mean": 1754.39,
-      "std": 373.01,
-      "min": 397.03,
-      "25%": 1535.29,
-      "50%": 1733.38,
-      "75%": 1957.43,
-      "max": 3484.91
-    },
-    "BENE_AVG_AGE": {
-      "count": 1306.0,
-      "mean": 72.98,
-      "std": 1.16,
-      "min": 67.0,
-      "25%": 72.0,
-      "50%": 73.0,
-      "75%": 74.0,
-      "max": 77.0
-    },
-    "BENE_DUAL_PCT": {
-      "count": 1306.0,
-      "mean": 0.14,
-      "std": 0.07,
-      "min": 0.02,
-      "25%": 0.09,
-      "50%": 0.13,
-      "75%": 0.17,
-      "max": 0.71
-    },
-    "BENE_FEML_PCT": {
-      "count": 1306.0,
-      "mean": 0.53,
-      "std": 0.02,
-      "min": 0.41,
-      "25%": 0.52,
-      "50%": 0.53,
-      "75%": 0.54,
-      "max": 0.59
-    },
-    "BENE_RACE_BLACK_PCT": {
-      "count": 1306.0,
-      "mean": 0.04,
-      "std": 0.07,
-      "min": 0.0,
-      "25%": 0.02,
-      "50%": 0.02,
-      "75%": 0.03,
-      "max": 0.65
-    },
-    "BENE_RACE_HSPNC_PCT": {
-      "count": 1306.0,
-      "mean": 0.03,
-      "std": 0.06,
-      "min": 0.0,
-      "25%": 0.01,
-      "50%": 0.02,
-      "75%": 0.02,
-      "max": 0.83
-    },
-    "suppliers_per_10k": {
-      "count": 1306.0,
-      "mean": 7.2,
-      "std": 0.57,
-      "min": 5.57,
-      "25%": 7.17,
-      "50%": 7.17,
-      "75%": 7.17,
-      "max": 9.12
+    "by_region": {
+      "Northeast": {
+        "n": 227,
+        "n_states": 9,
+        "spend_mean": 377.05,
+        "spend_sd": 122.37,
+        "util_mean": 1542.65,
+        "util_sd": 248.91,
+        "access_mean": 8.27,
+        "access_sd": 0.54,
+        "income_mean": 78217.79,
+        "poverty_mean": 0.11
+      },
+      "Midwest": {
+        "n": 1067,
+        "n_states": 12,
+        "spend_mean": 414.55,
+        "spend_sd": 147.52,
+        "util_mean": 1846.21,
+        "util_sd": 322.18,
+        "access_mean": 9.32,
+        "access_sd": 1.39,
+        "income_mean": 67633.13,
+        "poverty_mean": 0.12
+      },
+      "South": {
+        "n": 1437,
+        "n_states": 16,
+        "spend_mean": 558.85,
+        "spend_sd": 191.64,
+        "util_mean": 1752.56,
+        "util_sd": 336.1,
+        "access_mean": 8.66,
+        "access_sd": 0.57,
+        "income_mean": 60861.13,
+        "poverty_mean": 0.17
+      },
+      "West": {
+        "n": 462,
+        "n_states": 13,
+        "spend_mean": 435.66,
+        "spend_sd": 217.79,
+        "util_mean": 1678.39,
+        "util_sd": 534.07,
+        "access_mean": 7.5,
+        "access_sd": 1.05,
+        "income_mean": 72354.9,
+        "poverty_mean": 0.13
+      }
     }
   },
-  "eda_dual_spending_corr": {
-    "r": -0.002,
-    "p": 0.939005
+  "eda_poverty_spending_corr": {
+    "r": 0.165,
+    "p": 0.0
+  },
+  "eda_income_spending_corr": {
+    "r": -0.067,
+    "p": 0.000166
   },
   "RQ1": {
-    "ols_r2_train": 0.207,
-    "ols_adj_r2_train": 0.2,
-    "test_r2_ols": 0.123,
-    "test_adj_r2_ols": 0.091,
-    "test_rmse_ols": 158.59,
-    "test_mae_ols": 128.06,
-    "test_r2_rf": 0.172,
-    "test_rmse_rf": 154.07,
-    "test_mae_rf": 120.82,
+    "k_predictors": 11,
+    "split": "60/20/20",
+    "n_train": 1915,
+    "n_val": 639,
+    "n_test": 639,
+    "baseline_test_rmse": 188.36,
+    "baseline_test_mae": 148.99,
+    "ols_train_r2": 0.207,
+    "ols_train_rmse": 173.41,
+    "ols_train_mae": 134.51,
+    "ols_val_r2": 0.253,
+    "ols_val_rmse": 162.75,
+    "ols_val_mae": 127.79,
+    "ols_test_r2": 0.173,
+    "ols_test_rmse": 171.02,
+    "ols_test_mae": 133.27,
+    "rf_train_r2": 0.52,
+    "rf_train_rmse": 134.99,
+    "rf_train_mae": 102.85,
+    "rf_val_r2": 0.319,
+    "rf_val_rmse": 155.49,
+    "rf_val_mae": 119.3,
+    "rf_test_r2": 0.23,
+    "rf_test_rmse": 165.08,
+    "rf_test_mae": 126.08,
+    "max_vif": 3.01,
     "significant_predictors_p05": [
+      "const",
       "BENE_AVG_AGE",
+      "BENE_DUAL_PCT",
       "BENE_FEML_PCT",
       "BENE_RACE_HSPNC_PCT",
       "census_region_Northeast",
@@ -223,41 +349,73 @@
     ],
     "top3_rf_features": [
       "census_region_South",
-      "BENE_FEML_PCT",
-      "BENE_DUAL_PCT"
-    ],
-    "max_vif": 1.82
+      "suppliers_per_10k",
+      "BENE_RACE_HSPNC_PCT"
+    ]
   },
   "RQ2a_utilization_anova": {
-    "F": 23.912,
+    "F": 55.392,
     "p": 0.0,
-    "eta_sq": 0.052
+    "eta_sq": 0.05
   },
   "RQ2b_access_anova": {
-    "F": 126.684,
+    "F": 380.814,
     "p": 0.0,
-    "eta_sq": 0.226
+    "eta_sq": 0.264
   },
   "RQ2_kmeans": {
-    "best_k": 3,
-    "silhouette": 0.258,
+    "best_k": 2,
+    "silhouette": 0.207,
     "cluster_sizes": {
-      "0": 387,
-      "1": 851,
-      "2": 68
+      "0": 1164,
+      "1": 2029
     }
   },
-  "RQ3_preliminary": {
-    "n_suppliers": 47096,
-    "pct_flagged_iqr": 15.69,
+  "RQ3": {
+    "n_suppliers": 56562,
+    "pct_flagged_iqr": 15.7,
     "pct_flagged_iso": 3.5,
     "jaccard_similarity": 0.223,
-    "max_dme_payment_observed": 469050025.03
+    "max_dme_payment_observed": 469050025.03,
+    "mann_whitney": {
+      "DME_Tot_Suplr_Benes": {
+        "U": 107015108.0,
+        "p": 0.0
+      },
+      "DME_Tot_Suplr_Clms": {
+        "U": 106403882.0,
+        "p": 0.0
+      },
+      "DME_Suplr_Mdcr_Pymt_Amt": {
+        "U": 107721711.0,
+        "p": 0.0
+      },
+      "Bene_Avg_Risk_Scre": {
+        "U": 70534522.0,
+        "p": 4.4780467055410016e-119
+      }
+    },
+    "risk_score_flagged_mean": 1.959,
+    "risk_score_nonflagged_mean": 1.71,
+    "chi_square": {
+      "chi2": 63.63,
+      "p": 0.0,
+      "dof": 3,
+      "cramers_v": 0.034
+    }
   },
-  "RQ4_preliminary": {
-    "n_states": 53,
-    "mean_hhi": 1071.6,
-    "pct_highly_concentrated": 7.55,
-    "pct_unconcentrated": 75.47
+  "RQ4_supplier_state": {
+    "n_states": 55,
+    "mean_hhi": 1095.8,
+    "pct_highly_concentrated": 10.91,
+    "pct_unconcentrated": 85.45
+  },
+  "RQ4_referring_provider_category": {
+    "n_cells": 393,
+    "mean_hhi": 635.9,
+    "pct_highly_concentrated": 8.14,
+    "pct_unconcentrated": 89.31,
+    "n_categories": 7,
+    "n_states": 60
   }
 }
